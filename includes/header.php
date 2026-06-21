@@ -63,6 +63,28 @@ $avSvgs = [
             document.documentElement.setAttribute('data-theme', t);
         })();
 
+        // Menu hamburger mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggle = document.getElementById('navToggle');
+            var nav    = document.getElementById('mainNav');
+            if (!toggle || !nav) return;
+            toggle.addEventListener('click', function() {
+                var open = nav.classList.toggle('open');
+                toggle.classList.toggle('open', open);
+                toggle.setAttribute('aria-expanded', open);
+                document.body.classList.toggle('nav-open', open);
+            });
+            // Fermer en cliquant un lien
+            nav.querySelectorAll('a').forEach(function(a) {
+                a.addEventListener('click', function() {
+                    nav.classList.remove('open');
+                    toggle.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    document.body.classList.remove('nav-open');
+                });
+            });
+        });
+
         // Toggle thème — branché après chargement du DOM
         window.addEventListener('load', function() {
             var btn = document.getElementById('themeToggle');
