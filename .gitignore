@@ -1,0 +1,4 @@
+graphify-out/
+vendor/
+.DS_Store
+*.log
