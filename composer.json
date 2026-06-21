@@ -1,0 +1,10 @@
+{
+    "name": "slimtcp/alizquiz",
+    "description": "AlizQuiz cybersecurity quiz platform",
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-mbstring": "*"
+    }
+}
