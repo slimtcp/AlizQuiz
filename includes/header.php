@@ -42,17 +42,18 @@ $avSvgs = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($titrePage) ? nettoyer($titrePage) . ' — AlizQuiz' : 'AlizQuiz' ?></title>
-    <link rel="stylesheet" href="/AlizQuiz/assets/css/style.css?v=25&ngrok-skip-browser-warning=true">
-    <link rel="manifest" href="/AlizQuiz/manifest.json">
+    <?php $base = getenv('RAILWAY_ENVIRONMENT') ? '' : '/AlizQuiz'; ?>
+    <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css?v=26">
+    <link rel="manifest" href="<?= $base ?>/manifest.json">
     <meta name="theme-color" content="#3D7CFF">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AlizQuiz">
-    <link rel="apple-touch-icon" href="/AlizQuiz/assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="<?= $base ?>/assets/icons/icon-192.png">
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/AlizQuiz/sw.js');
+            navigator.serviceWorker.register('<?= $base ?>/sw.js');
         }
     </script>
     <script>
