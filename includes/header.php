@@ -13,12 +13,18 @@ $estConnecte = !empty($_SESSION['utilisateur_id']);
 $pseudoConnecte = $_SESSION['pseudo'] ?? '';
 $pageActuelle = basename($_SERVER['PHP_SELF']);
 
-// Avatar custom
+// Avatar custom — tolérant si la migration avatar n'a pas été lancée
+// (colonnes avatar_couleur/avatar_icone absentes) : on retombe sur
+// les valeurs par défaut au lieu de planter toute la page.
 if ($estConnecte && empty($_SESSION['avatar_couleur'])) {
     require_once __DIR__ . '/fonctions.php';
-    $stmtAv = $pdo->prepare('SELECT avatar_couleur, avatar_icone FROM utilisateurs WHERE id = ?');
-    $stmtAv->execute([$_SESSION['utilisateur_id']]);
-    $av = $stmtAv->fetch();
+    try {
+        $stmtAv = $pdo->prepare('SELECT avatar_couleur, avatar_icone FROM utilisateurs WHERE id = ?');
+        $stmtAv->execute([$_SESSION['utilisateur_id']]);
+        $av = $stmtAv->fetch() ?: [];
+    } catch (Throwable $e) {
+        $av = [];
+    }
     $_SESSION['avatar_couleur'] = $av['avatar_couleur'] ?? '#3D7CFF';
     $_SESSION['avatar_icone']   = $av['avatar_icone']   ?? 'shield';
 }
@@ -43,7 +49,7 @@ $avSvgs = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($titrePage) ? nettoyer($titrePage) . ' — AlizQuiz' : 'AlizQuiz' ?></title>
     <?php $base = getenv('RAILWAY_ENVIRONMENT') ? '' : '/AlizQuiz'; ?>
-    <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css?v=26">
+    <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css?v=27">
     <link rel="manifest" href="<?= $base ?>/manifest.json">
     <meta name="theme-color" content="#3D7CFF">
     <meta name="mobile-web-app-capable" content="yes">
@@ -57,53 +63,14 @@ $avSvgs = [
         }
     </script>
     <script>
-        // Appliquer le thème avant le rendu pour éviter le flash
+        // Appliquer le thème avant le rendu pour éviter le flash.
+        // Le menu mobile et le bouton de thème sont gérés une seule
+        // fois dans assets/js/script.js (éviter le double binding qui
+        // annulait le toggle au clic).
         (function() {
             var t = localStorage.getItem('alizquiz-theme') || 'dark';
             document.documentElement.setAttribute('data-theme', t);
         })();
-
-        // Menu hamburger mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            var toggle = document.getElementById('navToggle');
-            var nav    = document.getElementById('mainNav');
-            if (!toggle || !nav) return;
-            toggle.addEventListener('click', function() {
-                var open = nav.classList.toggle('open');
-                toggle.classList.toggle('open', open);
-                toggle.setAttribute('aria-expanded', open);
-                document.body.classList.toggle('nav-open', open);
-            });
-            // Fermer en cliquant un lien
-            nav.querySelectorAll('a').forEach(function(a) {
-                a.addEventListener('click', function() {
-                    nav.classList.remove('open');
-                    toggle.classList.remove('open');
-                    toggle.setAttribute('aria-expanded', 'false');
-                    document.body.classList.remove('nav-open');
-                });
-            });
-        });
-
-        // Toggle thème — branché après chargement du DOM
-        window.addEventListener('load', function() {
-            var btn = document.getElementById('themeToggle');
-            if (!btn) return;
-            function majIcones(theme) {
-                var moon = btn.querySelector('.icon-moon');
-                var sun  = btn.querySelector('.icon-sun');
-                if (moon) moon.style.display = theme === 'light' ? 'none' : '';
-                if (sun)  sun.style.display  = theme === 'light' ? ''     : 'none';
-            }
-            majIcones(document.documentElement.getAttribute('data-theme') || 'dark');
-            btn.addEventListener('click', function() {
-                var actuel  = document.documentElement.getAttribute('data-theme') || 'dark';
-                var nouveau = actuel === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', nouveau);
-                localStorage.setItem('alizquiz-theme', nouveau);
-                majIcones(nouveau);
-            });
-        });
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;0,800;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">

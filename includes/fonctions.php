@@ -225,7 +225,14 @@ function verifierBadges(PDO $pdo, int $userId): array
  */
 function getBadges(PDO $pdo, int $userId): array
 {
-    $stmt = $pdo->prepare('SELECT badge_slug, obtenu_le FROM badges_utilisateurs WHERE utilisateur_id = ? ORDER BY obtenu_le ASC');
-    $stmt->execute([$userId]);
-    return $stmt->fetchAll();
+    // Tolérant : si la table badges_utilisateurs n'a pas encore été
+    // créée (migration install_badges.php non lancée), on renvoie une
+    // liste vide au lieu de faire planter la page profil.
+    try {
+        $stmt = $pdo->prepare('SELECT badge_slug, obtenu_le FROM badges_utilisateurs WHERE utilisateur_id = ? ORDER BY obtenu_le ASC');
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    } catch (Throwable $e) {
+        return [];
+    }
 }
