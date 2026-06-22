@@ -193,7 +193,7 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <?php if ($resultatAffiche !== null && $resultatAffiche['reussi']): ?>
-<script src="/AlizQuiz/assets/js/confetti.js"></script>
+<script src="<?= $base ?>/assets/js/confetti.js"></script>
 <script>window.addEventListener('load', function(){ setTimeout(lancerConfettis, 300); });</script>
 <?php endif; ?>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

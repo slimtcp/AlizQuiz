@@ -287,7 +287,7 @@ document.querySelectorAll('.custom-nb-btn input').forEach(function(r){
 </div>
 
 <?php if ($resultatAffiche['reussi']): ?>
-<script src="/AlizQuiz/assets/js/confetti.js"></script>
+<script src="<?= $base ?>/assets/js/confetti.js"></script>
 <script>window.addEventListener('load', function(){ setTimeout(lancerConfettis, 300); });</script>
 <?php endif; ?>
 
