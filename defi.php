@@ -70,9 +70,12 @@ $demainIndex   = (int)(($demainDate->getTimestamp() - $refDate->getTimestamp()) 
 $themeDemain   = $themesRotation[abs($demainIndex) % count($themesRotation)];
 
 // ── Déjà participé ? ─────────────────────────────────────────────
-$stmtCheck = $pdo->prepare('SELECT score, temps_secondes FROM defi_resultats WHERE utilisateur_id = ? AND date_defi = ?');
-$stmtCheck->execute([$utilisateurId, $defiDate]);
-$dejaParticipe = $stmtCheck->fetch();
+$dejaParticipe = false;
+try {
+    $stmtCheck = $pdo->prepare('SELECT score, temps_secondes FROM defi_resultats WHERE utilisateur_id = ? AND date_defi = ?');
+    $stmtCheck->execute([$utilisateurId, $defiDate]);
+    $dejaParticipe = $stmtCheck->fetch() ?: false;
+} catch (Throwable $e) {}
 
 // ── Soumission du quiz ────────────────────────────────────────────
 $resultatAffiche = null;
@@ -104,8 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
         ];
     }
 
-    $stmtIns = $pdo->prepare('INSERT INTO defi_resultats (utilisateur_id, date_defi, score, temps_secondes) VALUES (?, ?, ?, ?)');
-    $stmtIns->execute([$utilisateurId, $defiDate, $score, $tempsSecondes]);
+    try {
+        $stmtIns = $pdo->prepare('INSERT INTO defi_resultats (utilisateur_id, date_defi, score, temps_secondes) VALUES (?, ?, ?, ?)');
+        $stmtIns->execute([$utilisateurId, $defiDate, $score, $tempsSecondes]);
+    } catch (Throwable $e) {}
 
     $pourcentage     = round(($score / 5) * 100);
     $resultatAffiche = [
@@ -119,14 +124,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
 }
 
 // ── Historique des 7 derniers défis + streak ─────────────────────
-$stmtHisto = $pdo->prepare('
-    SELECT date_defi, score FROM defi_resultats
-    WHERE utilisateur_id = ?
-    ORDER BY date_defi DESC
-    LIMIT 7
-');
-$stmtHisto->execute([$utilisateurId]);
-$historiqueDefi = $stmtHisto->fetchAll();
+$historiqueDefi = [];
+try {
+    $stmtHisto = $pdo->prepare('
+        SELECT date_defi, score FROM defi_resultats
+        WHERE utilisateur_id = ?
+        ORDER BY date_defi DESC
+        LIMIT 7
+    ');
+    $stmtHisto->execute([$utilisateurId]);
+    $historiqueDefi = $stmtHisto->fetchAll();
+} catch (Throwable $e) {}
 
 // Calcul du streak : jours consécutifs terminant à defiDate (ou hier si pas encore fait)
 $streakCount = 0;
@@ -141,17 +149,20 @@ while (isset($historiqueIndex[$cursorStreak->format('Y-m-d')])) {
 }
 
 // ── Classement du jour ────────────────────────────────────────────
-$stmtClass = $pdo->prepare('
-    SELECT u.pseudo, u.avatar_couleur, u.avatar_icone, dr.score, dr.temps_secondes,
-           (dr.utilisateur_id = :uid) AS c_est_moi
-    FROM defi_resultats dr
-    JOIN utilisateurs u ON u.id = dr.utilisateur_id
-    WHERE dr.date_defi = :date
-    ORDER BY dr.score DESC, dr.temps_secondes ASC
-    LIMIT 20
-');
-$stmtClass->execute([':uid' => $utilisateurId, ':date' => $defiDate]);
-$classementJour = $stmtClass->fetchAll();
+$classementJour = [];
+try {
+    $stmtClass = $pdo->prepare('
+        SELECT u.pseudo, dr.score, dr.temps_secondes,
+               (dr.utilisateur_id = :uid) AS c_est_moi
+        FROM defi_resultats dr
+        JOIN utilisateurs u ON u.id = dr.utilisateur_id
+        WHERE dr.date_defi = :date
+        ORDER BY dr.score DESC, dr.temps_secondes ASC
+        LIMIT 20
+    ');
+    $stmtClass->execute([':uid' => $utilisateurId, ':date' => $defiDate]);
+    $classementJour = $stmtClass->fetchAll();
+} catch (Throwable $e) {}
 
 // Rang de l'utilisateur courant
 $monRang = null;
@@ -538,7 +549,8 @@ require_once __DIR__ . '/includes/header.php';
 </div>
 
 <?php if ($resultatAffiche['reussi']): ?>
-<script src="/AlizQuiz/assets/js/confetti.js"></script>
+<?php $base = getenv('RAILWAY_ENVIRONMENT') ? '' : '/AlizQuiz'; ?>
+<script src="<?= $base ?>/assets/js/confetti.js"></script>
 <script>window.addEventListener('load', function(){ setTimeout(lancerConfettis, 300); });</script>
 <?php endif; ?>
 
