@@ -13,6 +13,7 @@ require_once __DIR__ . '/connexion.php';
 // Seuils de réussite pour débloquer le niveau suivant.
 const SEUIL_DEBUTANT      = 70; // % requis pour débloquer "intermediaire"
 const SEUIL_INTERMEDIAIRE = 75; // % requis pour débloquer "expert"
+const SEUIL_EXPERT        = 80; // % requis pour valider "expert" (certificat / termine)
 
 // Ordre des niveaux, utilisé pour savoir "où en est" l'utilisateur.
 const ORDRE_NIVEAUX = ['debutant', 'intermediaire', 'expert', 'termine'];
@@ -56,7 +57,7 @@ function enregistrerResultat(PDO $pdo, int $utilisateurId, string $niveau, int $
     $seuil = match ($niveau) {
         'debutant'      => SEUIL_DEBUTANT,
         'intermediaire' => SEUIL_INTERMEDIAIRE,
-        'expert'        => 0, // le niveau expert ne débloque rien d'autre qu'un certificat
+        'expert'        => SEUIL_EXPERT, // valide le parcours (→ termine + certificat)
         default         => 100,
     };
 

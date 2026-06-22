@@ -57,14 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifierJetonCSRF($_POST['csrf_toke
 
     $totalQuestions = count($idsQuestions);
     // Pour le niveau expert, on considère "réussi" si le score
-    // atteint au moins 75% (seuil cohérent avec les niveaux précédents,
-    // utilisé ici uniquement pour l'attribution du certificat).
+    // atteint au moins 80% (seuil le plus exigeant du parcours,
+    // utilisé ici pour l'attribution du certificat).
     $pourcentage = round(($score / $totalQuestions) * 100, 2);
     $resultat = enregistrerResultat($pdo, $utilisateurId, NIVEAU, $score, $totalQuestions);
 
     // enregistrerResultat() ne fait progresser vers "termine" que si
     // reussi=1 ; on ajuste ici le seuil d'affichage du certificat.
-    $reussiPourCertificat = $pourcentage >= 75;
+    $reussiPourCertificat = $pourcentage >= 80;
 
     $resultatAffiche = [
         'score'           => $score,
@@ -96,7 +96,7 @@ require_once __DIR__ . '/includes/header.php';
             <?php if ($resultatAffiche['reussi']): ?>
                 <p style="color: var(--success); margin-top: 10px; font-weight: 600;">Parcours complet ! Certificat débloqué.</p>
             <?php else: ?>
-                <p style="color: var(--error); margin-top: 10px; font-weight: 600;">Seuil de 75% non atteint. Réessayez !</p>
+                <p style="color: var(--error); margin-top: 10px; font-weight: 600;">Seuil de 80% non atteint. Réessayez !</p>
             <?php endif; ?>
         </div>
 
@@ -150,7 +150,7 @@ require_once __DIR__ . '/includes/header.php';
     <?php else: ?>
         <div class="quiz-header">
             <span class="quiz-theme-tag">Niveau Expert</span>
-            <span><?= count($questions) ?> questions · seuil de réussite 75%</span>
+            <span><?= count($questions) ?> questions · seuil de réussite 80%</span>
         </div>
         <div class="progress-track"><div class="progress-fill" id="quizProgressFill" style="width: 0%;"></div></div>
 
