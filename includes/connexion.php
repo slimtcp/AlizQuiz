@@ -45,6 +45,11 @@ try {
 
     $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
 
+    // S'assure que les colonnes / tables optionnelles existent
+    // (avatar, badges, défi). Ne tourne qu'une fois par conteneur.
+    require_once __DIR__ . '/schema.php';
+    assurerSchema($pdo);
+
 } catch (PDOException $e) {
     // En production, on ne doit jamais afficher le message d'erreur
     // brut (il peut révéler des infos sur la base de données).
