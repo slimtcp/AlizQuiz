@@ -57,7 +57,7 @@ $accessible = [
             <div class="niveau-divider"></div>
             <div class="niveau-card-foot">
                 <div class="niveau-stats">
-                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>10 questions</span>
+                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>15 questions</span>
                     <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5.5V11C4 16.5 7.5 20.5 12 22C16.5 20.5 20 16.5 20 11V5.5L12 2Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Seuil : 70 %</span>
                 </div>
                 <?php if ($scores['debutant'] !== null): ?>
@@ -96,7 +96,7 @@ $accessible = [
             <div class="niveau-divider"></div>
             <div class="niveau-card-foot">
                 <div class="niveau-stats">
-                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>15 questions</span>
+                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>25 questions</span>
                     <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5.5V11C4 16.5 7.5 20.5 12 22C16.5 20.5 20 16.5 20 11V5.5L12 2Z" stroke="currentColor" stroke-width="1.6"/><path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Seuil : 75 %</span>
                 </div>
                 <?php if ($scores['intermediaire'] !== null): ?>
@@ -139,7 +139,7 @@ $accessible = [
             <div class="niveau-divider"></div>
             <div class="niveau-card-foot">
                 <div class="niveau-stats">
-                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>20 questions</span>
+                    <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>40 questions</span>
                     <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17 3H7C5.9 3 5 3.9 5 5v14l7-3 7 3V5c0-1.1-.9-2-2-2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Certificat à la clé</span>
                 </div>
                 <?php if ($scores['expert'] !== null): ?>

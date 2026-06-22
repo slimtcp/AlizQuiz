@@ -2,7 +2,7 @@
 /**
  * quiz_intermediaire.php
  * ------------------------------------------------------------
- * Quiz du niveau Intermédiaire (15 questions).
+ * Quiz du niveau Intermédiaire (25 questions).
  * Contrairement au niveau Débutant, ce niveau exige d'avoir
  * débloqué l'accès (niveau_actuel de l'utilisateur >= intermediaire).
  * Si l'utilisateur tente d'accéder directement via l'URL sans

@@ -32,21 +32,21 @@ require_once __DIR__ . '/includes/header.php';
         <div class="hero-level-row">
             <div>
                 <div class="level-name">Niveau Débutant</div>
-                <div class="level-tag">10 questions · seuil 70%</div>
+                <div class="level-tag">15 questions · seuil 70%</div>
             </div>
             <span class="level-pill beginner">Accessible</span>
         </div>
         <div class="hero-level-row">
             <div>
                 <div class="level-name">Niveau Intermédiaire</div>
-                <div class="level-tag">15 questions · seuil 75%</div>
+                <div class="level-tag">25 questions · seuil 75%</div>
             </div>
             <span class="level-pill inter">À débloquer</span>
         </div>
         <div class="hero-level-row">
             <div>
                 <div class="level-name">Niveau Expert</div>
-                <div class="level-tag">20 questions · certificat final</div>
+                <div class="level-tag">40 questions · seuil 80%</div>
             </div>
             <span class="level-pill expert">Verrouillé</span>
         </div>
@@ -65,7 +65,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <h3>Débutant</h3>
             <p>Mots de passe, virus, mises à jour, emails suspects, HTTPS. Les bases indispensables pour tout utilisateur.</p>
-            <div class="meta"><span>10 questions</span><span>Seuil : 70%</span></div>
+            <div class="meta"><span>15 questions</span><span>Seuil : 70%</span></div>
         </div>
         <div class="card card-level">
             <div class="card-icon">
@@ -73,7 +73,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <h3>Intermédiaire</h3>
             <p>Phishing, ransomware, double authentification, réseaux, protection des données personnelles.</p>
-            <div class="meta"><span>15 questions</span><span>Seuil : 75%</span></div>
+            <div class="meta"><span>25 questions</span><span>Seuil : 75%</span></div>
         </div>
         <div class="card card-level">
             <div class="card-icon">
@@ -81,7 +81,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <h3>Expert</h3>
             <p>Pare-feu, VPN, chiffrement, injection SQL, force brute, sécurité réseau. Un certificat final récompense la réussite.</p>
-            <div class="meta"><span>20 questions</span><span>Certificat à la clé</span></div>
+            <div class="meta"><span>40 questions</span><span>Seuil : 80%</span></div>
         </div>
     </div>
 </section>
