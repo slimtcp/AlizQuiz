@@ -13,6 +13,9 @@
         <p class="footer-copy">&copy; <?= date('Y') ?> AlizQuiz — Tous droits réservés.</p>
     </div>
 </footer>
-<script src="/AlizQuiz/assets/js/script.js"></script><script src="/AlizQuiz/assets/js/effects.js"></script>
+<?php $base = isset($base) ? $base : (getenv('RAILWAY_ENVIRONMENT') ? '' : '/AlizQuiz'); ?>
+<script src="<?= $base ?>/assets/js/script.js"></script>
+<script src="<?= $base ?>/assets/js/effects.js"></script>
+<script src="<?= $base ?>/assets/js/anim.js"></script>
 </body>
 </html>
