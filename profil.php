@@ -22,8 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['avatar_couleur'])) {
     $icones_ok   = ['shield','lock','key','eye','zap','star','code','wifi','heart'];
     $couleur = in_array($_POST['avatar_couleur'], $couleurs_ok) ? $_POST['avatar_couleur'] : '#3D7CFF';
     $icone   = in_array($_POST['avatar_icone'], $icones_ok)   ? $_POST['avatar_icone']   : 'shield';
-    $pdo->prepare('UPDATE utilisateurs SET avatar_couleur=?, avatar_icone=? WHERE id=?')
-        ->execute([$couleur, $icone, $utilisateurId]);
+    try {
+        $pdo->prepare('UPDATE utilisateurs SET avatar_couleur=?, avatar_icone=? WHERE id=?')
+            ->execute([$couleur, $icone, $utilisateurId]);
+    } catch (Throwable $e) {}
     $_SESSION['avatar_couleur'] = $couleur;
     $_SESSION['avatar_icone']   = $icone;
     header('Location: profil.php');
