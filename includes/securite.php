@@ -55,13 +55,38 @@ function pseudoValide(string $pseudo): bool
 function demarrerSession(): void
 {
     if (session_status() === PHP_SESSION_NONE) {
+        // Durée de connexion : 30 jours. On reste connecté même après
+        // avoir fermé l'app / le navigateur ou être resté inactif
+        // longtemps (utile surtout sur mobile, où changer d'app peut
+        // sinon "perdre" la session).
+        $duree = 60 * 60 * 24 * 30; // 30 jours en secondes
+
+        // Côté serveur : durée de vie des données de session.
+        ini_set('session.gc_maxlifetime', (string) $duree);
+
+        // Cookie HTTPS uniquement en production (Railway), pas en local.
+        $secure = !empty($_SERVER['HTTPS']) || ($_SERVER['SERVER_PORT'] ?? null) == 443;
+
         session_set_cookie_params([
-            'lifetime' => 0,        // expire à la fermeture du navigateur
+            'lifetime' => $duree,   // le cookie survit à la fermeture du navigateur
             'path'     => '/',
+            'secure'   => $secure,  // cookie envoyé seulement en HTTPS en prod
             'httponly' => true,     // inaccessible en JavaScript (anti-XSS)
             'samesite' => 'Lax',    // limite les attaques CSRF
         ]);
         session_start();
+
+        // Rafraîchit le cookie à chaque visite : la fenêtre de 30 jours
+        // repart de zéro tant que l'utilisateur revient régulièrement.
+        if (!empty($_SESSION['utilisateur_id'])) {
+            setcookie(session_name(), session_id(), [
+                'expires'  => time() + $duree,
+                'path'     => '/',
+                'secure'   => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+        }
     }
 }
 

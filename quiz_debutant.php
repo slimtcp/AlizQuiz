@@ -2,9 +2,9 @@
 /**
  * quiz_debutant.php
  * ------------------------------------------------------------
- * Quiz du niveau Débutant (10 questions).
+ * Quiz du niveau Débutant (15 questions).
  * Fonctionnement en deux temps sur la MÊME page :
- *   1) GET  -> affiche les 10 questions dans un formulaire
+ *   1) GET  -> affiche les 15 questions dans un formulaire
  *   2) POST -> calcule le score côté serveur, enregistre le
  *      résultat, puis affiche le détail des réponses
  *

@@ -2,7 +2,7 @@
 /**
  * quiz_expert.php
  * ------------------------------------------------------------
- * Quiz du niveau Expert (20 questions), le plus avancé.
+ * Quiz du niveau Expert (40 questions), le plus avancé.
  * En cas de réussite, l'utilisateur passe au statut "termine"
  * et peut accéder à son certificat virtuel (certificat.php).
  * ------------------------------------------------------------
