@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifierJetonCSRF($_POST['csrf_toke
     ];
 }
 
-$questions = recupererQuestions($pdo, NIVEAU);
+$questions = recupererQuestions($pdo, NIVEAU, 15);
 
 $titrePage = 'Quiz Débutant';
 require_once __DIR__ . '/includes/header.php';
