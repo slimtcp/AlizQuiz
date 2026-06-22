@@ -19,15 +19,18 @@ const ORDRE_NIVEAUX = ['debutant', 'intermediaire', 'expert', 'termine'];
 
 /**
  * Retourne les questions d'un niveau donné, mélangées aléatoirement
- * (pour que l'ordre change à chaque tentative).
+ * (pour que l'ordre change à chaque tentative) et limitées à $limite
+ * questions (10 par défaut). On pioche dans toutes les questions du
+ * niveau (officielles + extra), puis on en garde 10 au hasard : le
+ * quiz reste court même si la banque de questions est grande.
  */
-function recupererQuestions(PDO $pdo, string $niveau): array
+function recupererQuestions(PDO $pdo, string $niveau, int $limite = 10): array
 {
     $stmt = $pdo->prepare('SELECT * FROM quiz WHERE niveau = ?');
     $stmt->execute([$niveau]);
     $questions = $stmt->fetchAll();
     shuffle($questions);
-    return $questions;
+    return array_slice($questions, 0, $limite);
 }
 
 /**
