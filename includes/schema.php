@@ -58,6 +58,16 @@ function assurerSchema(PDO $pdo): void
         )");
     } catch (Throwable $e) {}
 
+    // Sessions stockées en base (persistance / multi-instance)
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS sessions (
+            id VARCHAR(128) PRIMARY KEY,
+            data MEDIUMTEXT NOT NULL,
+            last_activity INT NOT NULL,
+            INDEX idx_last_activity (last_activity)
+        )");
+    } catch (Throwable $e) {}
+
     // Défi du jour
     try {
         $pdo->exec("CREATE TABLE IF NOT EXISTS defi_resultats (

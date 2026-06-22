@@ -8,6 +8,11 @@
  * ------------------------------------------------------------
  */
 
+// Connexion à la base : nécessaire pour stocker les sessions en base
+// (voir demarrerSession). Chargée ici, au niveau global, pour que la
+// variable $pdo soit disponible globalement avant tout session_start().
+require_once __DIR__ . '/connexion.php';
+
 /**
  * Nettoie une chaîne avant affichage HTML pour éviter les failles XSS
  * (Cross-Site Scripting). Le principe : si un utilisateur tape du
@@ -64,8 +69,18 @@ function demarrerSession(): void
         // Côté serveur : durée de vie des données de session.
         ini_set('session.gc_maxlifetime', (string) $duree);
 
-        // Cookie HTTPS uniquement en production (Railway), pas en local.
-        $secure = !empty($_SERVER['HTTPS']) || ($_SERVER['SERVER_PORT'] ?? null) == 443;
+        // Cookie HTTPS en production (Railway sert derrière un proxy
+        // HTTPS qui pose l'en-tête X-Forwarded-Proto), pas en local.
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || ($_SERVER['SERVER_PORT'] ?? null) == 443
+            || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+
+        // Stocke les sessions en base plutôt qu'en fichiers : évite la
+        // déconnexion au rafraîchissement sur un hébergement éphémère /
+        // multi-instance. Doit être fait AVANT session_start().
+        global $pdo;
+        require_once __DIR__ . '/session_db.php';
+        activerSessionsBdd($pdo ?? null);
 
         session_set_cookie_params([
             'lifetime' => $duree,   // le cookie survit à la fermeture du navigateur
