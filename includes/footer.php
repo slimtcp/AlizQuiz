@@ -17,5 +17,6 @@
 <script src="<?= $base ?>/assets/js/script.js"></script>
 <script src="<?= $base ?>/assets/js/effects.js"></script>
 <script src="<?= $base ?>/assets/js/anim.js"></script>
+<script src="<?= $base ?>/assets/js/quiz-stepper.js"></script>
 </body>
 </html>
