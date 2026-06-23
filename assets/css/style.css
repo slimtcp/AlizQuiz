@@ -1929,8 +1929,9 @@ table.history-table tbody tr:hover td { background: var(--blue-accent-soft); }
     gap: 12px;
     margin: 8px 0 18px;
 }
-.stepper-nav .stepper-prev { flex: 0 0 auto; }
-.stepper-nav .stepper-skip { flex: 0 0 auto; margin-left: auto; }
+.stepper-nav .stepper-prev   { flex: 0 0 auto; }
+.stepper-nav .stepper-valider { flex: 1 1 auto; }
+.stepper-nav .stepper-skip   { flex: 0 0 auto; margin-left: auto; }
 .question-card.step-in { animation: step-in 0.35s cubic-bezier(0.34, 1.2, 0.64, 1); }
 @keyframes step-in {
     from { opacity: 0; transform: translateY(14px); }

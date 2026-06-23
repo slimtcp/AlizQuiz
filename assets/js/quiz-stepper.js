@@ -64,12 +64,19 @@
         prevBtn.className = 'btn btn-ghost stepper-prev';
         prevBtn.textContent = 'Précédent';
 
+        var validerBtn = document.createElement('button');
+        validerBtn.type = 'button';
+        validerBtn.className = 'btn btn-primary stepper-valider';
+        validerBtn.textContent = 'Valider';
+        validerBtn.style.display = 'none';
+
         var skipBtn = document.createElement('button');
         skipBtn.type = 'button';
         skipBtn.className = 'btn btn-ghost stepper-skip';
         skipBtn.textContent = 'Passer cette question';
 
         nav.appendChild(prevBtn);
+        nav.appendChild(validerBtn);
         nav.appendChild(skipBtn);
 
         if (submitBtn) {
@@ -106,27 +113,40 @@
             }
 
             prevBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
-            skipBtn.style.display = last ? 'none' : '';
-            if (submitBtn) submitBtn.style.display = last ? '' : 'none';
+
+            // If the current question already has an answer selected, show Valider
+            var hasAnswer = cards[current].querySelector('input[type=radio]:checked');
+            if (last) {
+                validerBtn.style.display = 'none';
+                skipBtn.style.display = 'none';
+                if (submitBtn) submitBtn.style.display = '';
+            } else if (hasAnswer) {
+                validerBtn.style.display = '';
+                skipBtn.style.display = 'none';
+                if (submitBtn) submitBtn.style.display = 'none';
+            } else {
+                validerBtn.style.display = 'none';
+                skipBtn.style.display = '';
+                if (submitBtn) submitBtn.style.display = 'none';
+            }
 
             if (doScroll) scrollToTop();
         }
 
-        // ── Avancer automatiquement quand on choisit une réponse ────
-        cards.forEach(function (card, idx) {
+        // ── Surligner la réponse et afficher le bouton Valider ──────
+        cards.forEach(function (card) {
             card.querySelectorAll('input[type=radio]').forEach(function (r) {
                 r.addEventListener('change', function () {
-                    // Surligne en bleu l'option choisie (repli pour les
-                    // navigateurs sans :has()).
                     card.querySelectorAll('.option-item').forEach(function (o) {
                         o.classList.remove('option-selected');
                     });
                     var label = r.closest('.option-item');
                     if (label) label.classList.add('option-selected');
 
-                    // Laisse le temps de voir la sélection avant d'avancer.
-                    if (idx < total - 1) {
-                        setTimeout(function () { show(idx + 1, true); }, 600);
+                    var last = current === total - 1;
+                    if (!last) {
+                        validerBtn.style.display = '';
+                        skipBtn.style.display = 'none';
                     } else if (submitBtn) {
                         submitBtn.style.display = '';
                     }
@@ -134,8 +154,19 @@
             });
         });
 
-        prevBtn.addEventListener('click', function () { show(current - 1, true); });
-        skipBtn.addEventListener('click', function () { show(current + 1, true); });
+        validerBtn.addEventListener('click', function () {
+            validerBtn.style.display = 'none';
+            show(current + 1, true);
+        });
+
+        prevBtn.addEventListener('click', function () {
+            validerBtn.style.display = 'none';
+            show(current - 1, true);
+        });
+        skipBtn.addEventListener('click', function () {
+            validerBtn.style.display = 'none';
+            show(current + 1, true);
+        });
 
         show(0, false);
     }
