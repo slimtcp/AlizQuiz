@@ -113,13 +113,21 @@
             }
 
             prevBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
+            refreshNav();
 
-            // If the current question already has an answer selected, show Valider
+            if (doScroll) scrollToTop();
+        }
+
+        // Met à jour les boutons selon que la question courante a (ou non)
+        // une réponse sélectionnée. Appelée au changement de carte, à la
+        // sélection et à la désélection d'une réponse.
+        function refreshNav() {
+            var last = current === total - 1;
             var hasAnswer = cards[current].querySelector('input[type=radio]:checked');
             if (last) {
                 validerBtn.style.display = 'none';
                 skipBtn.style.display = 'none';
-                if (submitBtn) submitBtn.style.display = '';
+                if (submitBtn) submitBtn.style.display = hasAnswer ? '' : 'none';
             } else if (hasAnswer) {
                 validerBtn.style.display = '';
                 skipBtn.style.display = 'none';
@@ -129,27 +137,35 @@
                 skipBtn.style.display = '';
                 if (submitBtn) submitBtn.style.display = 'none';
             }
-
-            if (doScroll) scrollToTop();
         }
 
-        // ── Surligner la réponse et afficher le bouton Valider ──────
+        // ── Sélection / désélection d'une réponse ───────────────────
         cards.forEach(function (card) {
             card.querySelectorAll('input[type=radio]').forEach(function (r) {
+                // Re-clic sur une réponse déjà cochée → on la décoche.
+                // (les boutons radio ne se décochent pas nativement, on
+                // mémorise l'état au mousedown pour le détecter au click).
+                var etaitCochee = false;
+                r.addEventListener('mousedown', function () { etaitCochee = r.checked; });
+                r.addEventListener('keydown', function (e) {
+                    if (e.key === ' ' || e.key === 'Enter') etaitCochee = r.checked;
+                });
+                r.addEventListener('click', function () {
+                    if (etaitCochee) {
+                        r.checked = false;
+                        var l = r.closest('.option-item');
+                        if (l) l.classList.remove('option-selected');
+                        etaitCochee = false;
+                        refreshNav();
+                    }
+                });
                 r.addEventListener('change', function () {
                     card.querySelectorAll('.option-item').forEach(function (o) {
                         o.classList.remove('option-selected');
                     });
                     var label = r.closest('.option-item');
                     if (label) label.classList.add('option-selected');
-
-                    var last = current === total - 1;
-                    if (!last) {
-                        validerBtn.style.display = '';
-                        skipBtn.style.display = 'none';
-                    } else if (submitBtn) {
-                        submitBtn.style.display = '';
-                    }
+                    refreshNav();
                 });
             });
         });
