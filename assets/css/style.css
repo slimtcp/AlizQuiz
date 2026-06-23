@@ -1343,7 +1343,23 @@ a { color: inherit; text-decoration: none; }
 
 .option-item:hover { border-color: var(--border-glow); background: var(--blue-accent-soft); transform: translateX(4px); }
 .option-item input[type="radio"] { accent-color: var(--blue-accent); width: 17px; height: 17px; }
-.option-item.selected { border-color: var(--blue-accent); background: var(--blue-accent-soft); }
+
+/* Réponse choisie : surlignée en bleu (badge lettre inclus).
+   :has() pour les navigateurs récents + classe .option-selected
+   posée par quiz-stepper.js en repli pour les plus anciens. */
+.option-item.selected,
+.option-item.option-selected,
+.option-item:has(input[type="radio"]:checked) {
+    border-color: var(--blue-accent);
+    background: var(--blue-accent-soft);
+    box-shadow: 0 0 0 1px var(--blue-accent), 0 0 20px -6px rgba(61, 124, 255, 0.55);
+}
+.option-item.option-selected .option-letter,
+.option-item:has(input[type="radio"]:checked) .option-letter {
+    background: var(--grad-blue);
+    color: #fff;
+    border-color: transparent;
+}
 
 .option-letter {
     width: 28px; height: 28px;

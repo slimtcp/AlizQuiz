@@ -50,6 +50,10 @@ try {
     require_once __DIR__ . '/schema.php';
     assurerSchema($pdo);
 
+    // Rééquilibrage des réponses des questions (distracteurs crédibles).
+    require_once __DIR__ . '/ameliorations_questions.php';
+    ameliorerQuestions($pdo);
+
 } catch (PDOException $e) {
     // En production, on ne doit jamais afficher le message d'erreur
     // brut (il peut révéler des infos sur la base de données).

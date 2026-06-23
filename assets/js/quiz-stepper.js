@@ -116,8 +116,17 @@
         cards.forEach(function (card, idx) {
             card.querySelectorAll('input[type=radio]').forEach(function (r) {
                 r.addEventListener('change', function () {
+                    // Surligne en bleu l'option choisie (repli pour les
+                    // navigateurs sans :has()).
+                    card.querySelectorAll('.option-item').forEach(function (o) {
+                        o.classList.remove('option-selected');
+                    });
+                    var label = r.closest('.option-item');
+                    if (label) label.classList.add('option-selected');
+
+                    // Laisse le temps de voir la sélection avant d'avancer.
                     if (idx < total - 1) {
-                        setTimeout(function () { show(idx + 1, true); }, 320);
+                        setTimeout(function () { show(idx + 1, true); }, 600);
                     } else if (submitBtn) {
                         submitBtn.style.display = '';
                     }
