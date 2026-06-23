@@ -236,13 +236,14 @@ document.querySelectorAll('.custom-nb-btn input').forEach(function(r){
         <span class="quiz-theme-tag" style="margin-bottom:14px; display:inline-block;"><?= nettoyer($q['theme']) ?></span>
         <h2>Q<?= $index+1 ?>. <?= nettoyer($q['question']) ?></h2>
         <div class="options-list">
-            <?php for ($i = 1; $i <= 4; $i++): ?>
+            <?php $ordreReponses = [1, 2, 3, 4]; shuffle($ordreReponses); ?>
+            <?php foreach ($ordreReponses as $pos => $i): ?>
             <label class="option-item">
-                <span class="option-letter"><?= chr(64+$i) ?></span>
+                <span class="option-letter"><?= chr(65+$pos) ?></span>
                 <input type="radio" name="reponse_<?= $q['id'] ?>" value="<?= $i ?>" required>
                 <?= nettoyer($q['reponse'.$i]) ?>
             </label>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
     </div>
     <?php endforeach; ?>

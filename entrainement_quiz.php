@@ -175,11 +175,17 @@ function showQuestion(idx) {
 let selectedAnswer = null;
 
 function buildQCM(q) {
-    const opts = [q.reponse1, q.reponse2, q.reponse3, q.reponse4];
+    // Ordre d'affichage mélangé : on garde la position d'origine
+    // (1 à 4) dans data-pos pour ne pas fausser la bonne réponse.
+    const order = [1, 2, 3, 4];
+    for (let k = order.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [order[k], order[j]] = [order[j], order[k]];
+    }
     selectedAnswer = null;
     let html = '<div class="entr-options">';
-    opts.forEach((opt, i) => {
-        html += `<button class="entr-option" onclick="selectOption(${i+1})">${escHtml(opt)}</button>`;
+    order.forEach(function (pos) {
+        html += `<button class="entr-option" data-pos="${pos}" onclick="selectOption(${pos})">${escHtml(q['reponse' + pos])}</button>`;
     });
     html += '</div>';
     html += `<button id="btnValidateQcm" class="btn btn-ghost entr-btn-validate" onclick="confirmQCM()" disabled>Valider</button>`;
@@ -188,8 +194,8 @@ function buildQCM(q) {
 
 function selectOption(chosen) {
     selectedAnswer = chosen;
-    document.querySelectorAll('.entr-option').forEach((btn, i) => {
-        btn.classList.toggle('entr-option-selected', i + 1 === chosen);
+    document.querySelectorAll('.entr-option').forEach(function (btn) {
+        btn.classList.toggle('entr-option-selected', parseInt(btn.dataset.pos) === chosen);
     });
     const valBtn = document.getElementById('btnValidateQcm');
     if (valBtn) valBtn.disabled = false;
@@ -202,11 +208,12 @@ function confirmQCM() {
     const chosen = selectedAnswer;
     const valBtn = document.getElementById('btnValidateQcm');
     if (valBtn) valBtn.disabled = true;
-    document.querySelectorAll('.entr-option').forEach((btn, i) => {
+    document.querySelectorAll('.entr-option').forEach(function (btn) {
+        const pos = parseInt(btn.dataset.pos);
         btn.disabled = true;
         btn.classList.remove('entr-option-selected');
-        if (i + 1 === correct) btn.classList.add('entr-option-correct');
-        else if (i + 1 === chosen) btn.classList.add('entr-option-wrong');
+        if (pos === correct) btn.classList.add('entr-option-correct');
+        else if (pos === chosen) btn.classList.add('entr-option-wrong');
     });
     if (chosen === correct) score++;
     revealExpl();
